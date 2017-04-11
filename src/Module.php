@@ -57,7 +57,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
         ];
     }
 
-    public function disabledPanels($list = []){
+    public function disabledPanels($list = []) {
 
     }
 
@@ -73,9 +73,11 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 ]
             );
         }
-        if($this->transport->alive()) {
+        if ($this->transport->alive()) {
             $content = $this->collectData();
-            $this->transport->sendContent($tag, $summary, $data);
+            if ($this->transport->sendContent($content['tag'], $content['summary'], $content['data'])) {
+                exit(0);
+            }
         }
 
     }
@@ -97,15 +99,15 @@ class Module extends \yii\base\Module implements BootstrapInterface
         return [
             'tag'     => uniqid(),
             'summary' => $summary,
-            'data' => $data
+            'data'    => $data
         ];
     }
+
     /**
      * Collects summary data of current request.
      * @return array
      */
-    protected function collectBaseSummary()
-    {
+    protected function collectBaseSummary() {
         if (\Yii::$app === null) {
             return '';
         }
@@ -113,7 +115,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
         $request = \Yii::$app->getRequest();
         $response = \Yii::$app->getResponse();
         $summary = [
-            'tag'        => $this->tag,
             'url'        => $request->getAbsoluteUrl(),
             'ajax'       => (int)$request->getIsAjax(),
             'method'     => $request->getMethod(),

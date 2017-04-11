@@ -9,5 +9,5 @@ namespace wirwolf\yii2DebugBackend\Transports\Databases;
  */
 interface IDatabase
 {
-
+    public function save($tag, $summary, $data);
 }

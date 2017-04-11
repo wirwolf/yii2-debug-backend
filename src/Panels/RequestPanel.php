@@ -29,7 +29,7 @@ class RequestPanel extends Object implements IPanel
      * @return string content that is displayed at debug toolbar
      */
     public function getSummary() {
-        // TODO: Implement getSummary() method.
+        return [];
     }
 
     /**
@@ -39,6 +39,6 @@ class RequestPanel extends Object implements IPanel
      * @return mixed data to be saved
      */
     public function getData() {
-        // TODO: Implement getData() method.
+        return \Yii::$app->request;
     }
 }

@@ -7,10 +7,11 @@
 
 namespace wirwolf\yii2DebugBackend\Panels;
 
+use wirwolf\yii2DebugBackend\IPanel;
 use Yii;
 use yii\base\Event;
+use yii\base\Object;
 use yii\debug\models\search\Mail;
-use yii\debug\Panel;
 use yii\mail\BaseMailer;
 use yii\helpers\FileHelper;
 use yii\mail\MessageInterface;
@@ -23,22 +24,33 @@ use yii\mail\MessageInterface;
  * @author Mark Jebri <mark.github@yandex.ru>
  * @since 2.0
  */
-class MailPanel extends Panel
+class MailPanel extends Object implements IPanel
 {
-    /**
-     * @var string path where all emails will be saved. should be an alias.
-     */
-    public $mailPath = '@runtime/debug/mail';
 
     /**
-     * @var array current request sent messages
+     * @return string name of the panel
      */
-    private $_messages = [];
-
+    public function getId() {
+        return 'yii.mail';
+    }
 
     /**
-     * @inheritdoc
+     * @return array
      */
+    public function getSummary() {
+        return ['mailCount' => 0];
+    }
+
+    /**
+     * Saves data to be later used in debugger detail view.
+     * This method is called on every page where debugger is enabled.
+     *
+     * @return mixed data to be saved
+     */
+    public function getData() {
+        return [];
+    }
+
     public function init()
     {
         parent::init();
@@ -47,14 +59,14 @@ class MailPanel extends Panel
             /* @var $message MessageInterface */
             $message = $event->message;
             $messageData = [
-                    'isSuccessful' => $event->isSuccessful,
-                    'from' => $this->convertParams($message->getFrom()),
-                    'to' => $this->convertParams($message->getTo()),
-                    'reply' => $this->convertParams($message->getReplyTo()),
-                    'cc' => $this->convertParams($message->getCc()),
-                    'bcc' => $this->convertParams($message->getBcc()),
-                    'subject' => $message->getSubject(),
-                    'charset' => $message->getCharset(),
+                'isSuccessful' => $event->isSuccessful,
+                'from' => $this->convertParams($message->getFrom()),
+                'to' => $this->convertParams($message->getTo()),
+                'reply' => $this->convertParams($message->getReplyTo()),
+                'cc' => $this->convertParams($message->getCc()),
+                'bcc' => $this->convertParams($message->getBcc()),
+                'subject' => $message->getSubject(),
+                'charset' => $message->getCharset(),
             ];
 
             // add more information when message is a SwiftMailer message
@@ -92,56 +104,6 @@ class MailPanel extends Panel
             $this->_messages[] = $messageData;
         });
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'Mail';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSummary()
-    {
-        return Yii::$app->view->render('panels/mail/summary', ['panel' => $this, 'mailCount' => count($this->data)]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDetail()
-    {
-        $searchModel = new Mail();
-        $dataProvider = $searchModel->search(Yii::$app->request->get(), $this->data);
-
-        return Yii::$app->view->render('panels/mail/detail', [
-                'panel' => $this,
-                'dataProvider' => $dataProvider,
-                'searchModel' => $searchModel
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function save()
-    {
-        return $this->getMessages();
-    }
-
-    /**
-     * Returns info about messages of current request. Each element is array holding
-     * message info, such as: time, reply, bc, cc, from, to and other.
-     * @return array messages
-     */
-    public function getMessages()
-    {
-        return $this->_messages;
-    }
-
     private function convertParams($attr)
     {
         if (is_array($attr)) {

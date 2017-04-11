@@ -16,20 +16,18 @@ use yii\log\Target;
  */
 class CollectLogTarget extends Target
 {
+
     /**
      * @var Module
      */
     public $module;
-    public $tag;
-
 
     /**
      * CollectLogTarget constructor.
      * @param Module $module
      * @param array $config
      */
-    public function __construct(Module $module, $config = [])
-    {
+    public function __construct(Module $module, $config = []) {
         parent::__construct($config);
         $this->module = $module;
     }
@@ -38,10 +36,7 @@ class CollectLogTarget extends Target
      * Exports log messages to a specific destination.
      * Child classes must implement this method.
      */
-    public function export()
-    {
+    public function export() {
         $this->module->sendData();
-
     }
-
 }

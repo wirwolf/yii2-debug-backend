@@ -22,14 +22,14 @@ class DbPanel extends Object implements IPanel
      * @return string name of the panel
      */
     public function getId() {
-        // TODO: Implement getId() method.
+        return 'yii.db';
     }
 
     /**
      * @return string content that is displayed at debug toolbar
      */
     public function getSummary() {
-        // TODO: Implement getSummary() method.
+        return [];
     }
 
     /**
@@ -39,6 +39,6 @@ class DbPanel extends Object implements IPanel
      * @return mixed data to be saved
      */
     public function getData() {
-        // TODO: Implement getData() method.
+        return [];
     }
 }

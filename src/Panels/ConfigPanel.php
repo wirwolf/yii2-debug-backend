@@ -11,7 +11,6 @@ namespace wirwolf\yii2DebugBackend\Panels;
 use wirwolf\yii2DebugBackend\IPanel;
 use Yii;
 use yii\base\Object;
-use yii\debug\Panel;
 
 /**
  * Debugger panel that collects and displays application configuration and environment.
@@ -84,6 +83,4 @@ class ConfigPanel extends Object implements IPanel
             'extensions'  => Yii::$app->extensions,
         ];
     }
-
-
 }

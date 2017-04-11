@@ -15,4 +15,16 @@ namespace wirwolf\yii2DebugBackend;
 interface ITransport
 {
 
+    /**
+     * @param $tag
+     * @param $summary
+     * @param $data
+     * @return mixed
+     */
+    public function sendContent($tag, $summary, $data);
+
+    /**
+     * @return bool
+     */
+    public function alive();
 }
