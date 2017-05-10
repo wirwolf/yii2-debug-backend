@@ -25,9 +25,11 @@ class LocalDatabaseTransport extends Object implements ITransport
      * LocalDatabaseTransport constructor.
      * @param array $config
      */
-    public function __construct(array $config = []) {
+    public function init() {
         if(!$this->storageClass) {
             $this->storageClass = \Yii::createObject(['class' => FileDatabase::className()]);
+        } else {
+            $this->storageClass = \Yii::createObject($this->storageClass);
         }
     }
 

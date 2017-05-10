@@ -104,6 +104,7 @@ class MailPanel extends Object implements IPanel
             $this->_messages[] = $messageData;
         });
     }
+
     private function convertParams($attr)
     {
         if (is_array($attr)) {

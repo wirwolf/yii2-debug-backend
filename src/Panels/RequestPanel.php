@@ -22,7 +22,7 @@ class RequestPanel extends Object implements IPanel
      * @return string name of the panel
      */
     public function getId() {
-        // TODO: Implement getId() method.
+        return 'yii.request';
     }
 
     /**

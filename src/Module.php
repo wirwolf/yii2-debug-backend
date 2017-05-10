@@ -48,12 +48,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function getBasePanels() {
         return [
-           'asset' => Panels\AssetPanel::class,
-           'config' => Panels\ConfigPanel::class,
-           'db' => Panels\DbPanel::class,
-           'log' => Panels\LogPanel::class,
-           'mail' => Panels\MailPanel::class,
-           'request' => Panels\RequestPanel::class,
+            'asset'   => Panels\AssetPanel::class,
+            'config'  => Panels\ConfigPanel::class,
+            'db'      => Panels\DbPanel::class,
+            'log'     => Panels\LogPanel::class,
+            'mail'    => Panels\MailPanel::class,
+            'request' => Panels\RequestPanel::class,
         ];
     }
 
@@ -72,6 +72,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
                     'storageClass' => Transports\Databases\FileDatabase::class
                 ]
             );
+        } else {
+            $this->transport = \Yii::createObject($this->transport);
         }
         if ($this->transport->alive()) {
             $content = $this->collectData();
@@ -93,7 +95,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
             if(!$itemObject instanceof IPanel) {
                 $errorLog[] = $itemObject::className() . ' not implement IPanel interface';
             }
-            $summary = array_merge($summary, $itemObject->getSummary());
+            $summary['plugins'] = array_merge($summary['plugins'], $itemObject->getSummary());
             $data[$itemObject->getId()] = $itemObject->getData();
         }
         return [
@@ -121,6 +123,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
             'ip'         => $request->getUserIP(),
             'time'       => $_SERVER['REQUEST_TIME_FLOAT'],
             'statusCode' => $response->statusCode,
+            'plugins'    => []
         ];
         return $summary;
     }
